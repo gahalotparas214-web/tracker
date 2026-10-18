@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="hi"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Study Tracker</title>
+<style>
+:root{--bg:#0d0b24;--bg2:#1a1446;--card:#1b1840cc;--tx:#f1efff;--mu:#a29fcf;--bd:#34306b;--ac:#8b5cf6;--c1:#f97316;--c2:#8b5cf6;--c3:#0ea5e9;--c4:#10b981;--c5:#ec4899;--in:#12102e;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px);background:#0d0b24}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:radial-gradient(circle at 15% 0%,var(--bg2),var(--bg) 60%);color:var(--tx);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding:16px}
+.wrap{max-width:1100px;margin:auto}
+h1{margin:0;font-size:1.7rem}
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.sub{color:var(--mu);font-size:.9rem;margin-top:2px}
+.tbtn{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:8px 12px;cursor:pointer;color:var(--tx);font-size:1rem}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:16px 0}
+.st{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:12px;text-align:center}
+.st b{display:block;font-size:1.5rem}.st span{font-size:.78rem;color:var(--mu)}
+.grid{display:grid;grid-template-columns:minmax(0,1fr);gap:14px;max-width:640px;margin:0 auto}
+.tabs{display:flex;gap:8px;overflow-x:auto;max-width:640px;margin:0 auto 12px;padding:4px 2px}
+.tab{flex:1;min-width:84px;display:flex;flex-direction:column;align-items:center;gap:2px;background:var(--card);border:2px solid var(--bd);border-radius:14px;padding:8px 6px;color:var(--tx);font-weight:600;font-size:.9rem}
+.tab small{color:var(--mu);font-weight:500;font-size:.7rem}
+.tab.on{border-color:var(--c);background:color-mix(in srgb,var(--c) 18%,var(--card));box-shadow:0 0 12px color-mix(in srgb,var(--c) 45%,transparent)}
+.card{background:var(--card);border:1px solid var(--bd);border-top:5px solid var(--c);border-radius:20px;padding:14px;backdrop-filter:blur(6px)}
+.ch{display:flex;align-items:center;gap:10px}
+.ic{font-size:1.8rem;background:color-mix(in srgb,var(--c) 18%,transparent);border-radius:14px;width:46px;height:46px;display:grid;place-items:center}
+.ch h2{margin:0;font-size:1.2rem;flex:1}
+.pct{font-weight:700;color:var(--c)}
+.bar{height:10px;background:color-mix(in srgb,var(--c) 15%,transparent);border-radius:9px;overflow:hidden;margin:6px 0}
+.bar i{display:block;height:100%;background:var(--c);border-radius:9px;transition:width .4s}
+h3{font-size:.85rem;margin:14px 0 6px;color:var(--mu);text-transform:uppercase;letter-spacing:.06em}
+.row{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+button{font:inherit;cursor:pointer}
+.b{border:1px solid var(--c);background:transparent;color:var(--c);border-radius:10px;padding:5px 10px;font-weight:600}
+.b:active{background:var(--c);color:#fff}
+.bf{background:var(--c);color:#fff;border:0;border-radius:10px;padding:6px 12px;font-weight:600}
+input[type=text],input[type=number],textarea{background:var(--in);color:var(--tx);border:1px solid var(--bd);border-radius:10px;padding:7px 9px;font:inherit;min-width:0}
+input[type=text]{flex:1}
+input[type=number]{width:64px}
+.it{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:6px 4px;border-bottom:1px dashed var(--bd)}
+.rd{flex-basis:100%;display:flex;align-items:center;flex-wrap:wrap;gap:5px;padding-left:32px;font-size:.75rem;color:var(--mu)}
+.rv2{display:flex;align-items:center;flex-wrap:wrap;gap:3px;font-size:.72rem;color:var(--mu)}
+.rv2 .dot{width:22px;height:22px;font-size:.68rem}
+.rv2 .lv{margin-left:3px}
+.it span{min-width:90px}
+.dot{width:24px;height:24px;border-radius:50%;border:2px solid var(--c);background:transparent;padding:0;font-size:.72rem;font-weight:700;color:var(--c);opacity:.55}
+.dot.on{background:var(--c);color:#fff;opacity:1;box-shadow:0 0 9px var(--c)}
+.lv{font-weight:700;color:var(--c);margin-left:4px}
+.due{color:#ef4444;font-weight:700;margin-left:4px}
+.it span{flex:1;word-break:break-word}
+.it.d span{text-decoration:line-through;opacity:.55}
+.ck{width:24px;height:24px;border-radius:8px;border:2px solid var(--c);background:transparent;color:#fff;font-size:.9rem;line-height:1;padding:0;flex:none}
+.d .ck{background:var(--c)}
+.x{border:0;background:none;color:var(--mu);font-size:1rem}
+.rv{display:flex;align-items:center;gap:4px;font-size:.85rem;background:color-mix(in srgb,var(--c) 14%,transparent);border-radius:20px;padding:2px 6px}
+.rv button{border:0;background:none;color:var(--c);font-weight:800;padding:0 4px}
+.scroll{max-height:230px;overflow-y:auto}
+.empty{color:var(--mu);font-size:.85rem;padding:6px}
+.win{color:var(--c4);font-weight:700;font-size:.85rem}
+.bk{margin-top:18px;background:var(--card);border:1px solid var(--bd);border-radius:20px;padding:14px}
+textarea{width:100%;height:90px;font-size:.75rem;margin-top:8px}
+.bk .b,.bk .bf{--c:var(--ac)}
+.note{font-size:.8rem;color:var(--mu);margin-top:6px}
+.qt{position:relative;overflow:hidden;background:linear-gradient(135deg,#1d4ed8,#7c3aed 55%,#db2777);color:#fff;border-radius:20px;padding:16px 46px 16px 54px;font-size:1.08rem;line-height:1.45;margin-bottom:12px;box-shadow:0 10px 26px #7c3aed55}
+.qt:before{content:"\201C";position:absolute;left:12px;top:-4px;font-size:4.8rem;font-family:Georgia,serif;opacity:.4;line-height:1}
+.qt:after{content:"";position:absolute;right:-34px;bottom:-44px;width:130px;height:130px;border-radius:50%;background:#ffffff1f}
+.qt .ql{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;opacity:.85;font-style:normal;margin-bottom:4px}
+.qt .qx{font-family:Georgia,"Times New Roman",serif;font-style:italic;font-weight:600;position:relative;z-index:1;word-break:break-word}
+.qt .qe{position:absolute;right:10px;top:10px;border:0;background:#ffffff33;color:#fff;border-radius:10px;padding:3px 8px;z-index:2}
+.qt textarea{margin-top:4px;position:relative;z-index:1}
+.qt .row{position:relative;z-index:1}
+.chips{display:flex;gap:6px;overflow-x:auto;padding:4px 0 8px}
+.chip{flex:none;display:flex;flex-direction:column;align-items:center;background:transparent;border:1.5px solid var(--bd);border-radius:12px;padding:4px 10px;color:var(--tx)}
+.chip small{color:var(--mu);font-size:.7rem}
+.chip.on{border-color:var(--ac);background:color-mix(in srgb,var(--ac) 22%,transparent)}
+select,input[type=date]{background:var(--in);color:var(--tx);border:1px solid var(--bd);border-radius:10px;padding:7px 9px;font:inherit;min-width:0}
+.qt .sub{color:#e6f0ff}
+.pg{background:var(--card);border:1px solid var(--bd);border-left:7px solid var(--ac);border-radius:16px;padding:14px 14px 10px 16px;box-shadow:0 8px 22px #0006}
+.pg h2{margin:0 0 8px;font-size:1.15rem}
+.sj{margin:14px 0 4px;font-weight:700;color:var(--ac);border-bottom:2px solid var(--bd);padding-bottom:3px}
+.dg{padding:10px 8px;border-bottom:1px dashed var(--bd);border-radius:10px}
+.dg.ok{background:#10b98114}.dg.no{background:#ef444414}
+.dgt{font-weight:600;margin-bottom:6px;word-break:break-word}
+.dgb{border:1.5px solid var(--bd);background:transparent;color:var(--tx);border-radius:10px;padding:6px 12px;font-weight:600}
+.dgb.ok.on{background:#10b981;border-color:#10b981;color:#fff}
+.dgb.no.on{background:#ef4444;border-color:#ef4444;color:#fff}
+.rmk{width:100%;margin-top:6px}
+.sm3{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0;font-size:.85rem;font-weight:600}
+.sm3 span{border-radius:20px;padding:3px 10px;background:color-mix(in srgb,var(--ac) 18%,transparent)}
+</style></head>
+<body><div class="wrap">
+<div class="top"><div><h1>📚 Study Tracker</h1><div class="sub" id="dt"></div></div></div>
+<div class="stats" id="stats"></div>
+<div class="tabs" id="tabs"></div>
+<div class="grid" id="grid"></div>
+<div class="bk"><b>💾 Backup &amp; Restore</b>
+<div class="note">Apna data safe rakhne ke liye "Backup banao" dabao, code copy karke kahin save kar lo (Notes/WhatsApp). Wapas laane ke liye code yahan paste karke "Restore" dabao.</div>
+<div class="row" style="margin-top:8px"><button class="bf" data-a="bk">📤 Backup banao</button><button class="b" data-a="rs">📥 Restore karo</button><button class="b" data-a="rst" style="--c:#ef4444">🗑️ Reset</button></div>
+<textarea id="ta" placeholder="Backup code yahan dikhega / restore ke liye yahan paste karo"></textarea>
+<div class="note" id="bm"></div></div>
+</div>
+<script>
+const SUBS=[{id:'maths',n:'Maths',ic:'➗',c:'--c1'},{id:'maths2',n:'Maths',ic:'➗',c:'--c1'},{id:'reasoning',n:'Reasoning',ic:'🧩',c:'--c2'},{id:'english',n:'English',ic:'📖',c:'--c3'},{id:'english2',n:'English',ic:'📖',c:'--c3'},{id:'english3',n:'English',ic:'📖',c:'--c3'},{id:'gk',n:'GK',ic:'🌍',c:'--c4'},{id:'gk2',n:'GK',ic:'🌍',c:'--c4'},{id:'gk3',n:'GK',ic:'🌍',c:'--c4'},{id:'gk4',n:'GK',ic:'🌍',c:'--c4'},{id:'gk5',n:'GK',ic:'🌍',c:'--c4'},{id:'gk6',n:'GK',ic:'🌍',c:'--c4'},{id:'gk7',n:'GK',ic:'🌍',c:'--c4'},{id:'computer',n:'Computer',ic:'💻',c:'--c5'}];
+const KEY='pq_v1';let DD=new Date().toLocaleDateString('en-CA'),TAB='diary',QE=false,DGS='maths',MS={maths:'maths',english:'english',gk:'gk'};
+const T=()=>new Date().toLocaleDateString('en-CA');
+let S=null;
+try{S=JSON.parse(localStorage.getItem(KEY)||'null')}catch(e){}
+function fresh(){const s={subs:{},days:{}};SUBS.forEach(x=>s.subs[x.id]={qt:50,topics:[]});return s}
+if(!S||!S.subs)S=fresh();
+const ens=()=>['maths2','english2','english3','gk2','gk3','gk4','gk5','gk6','gk7','computer'].forEach(k=>{if(!S.subs[k])S.subs[k]={qt:50,topics:[]}});ens();
+const SEC={maths:'Arithmetic',maths2:'Advance',english:'Vocab',english2:'Grammar',english3:'Comprehension',gk:'Static',gk2:'History',gk3:'Polity',gk4:'Economics',gk5:'Geography',gk6:'Current Affairs',gk7:'Science'};
+const GROUPS={maths:[['maths','🔢 Arithmetic'],['maths2','🚀 Advance']],english:[['english','📝 Vocab'],['english2','✍️ Grammar'],['english3','📚 Comprehension']],gk:[['gk','🏛️ Static'],['gk2','📜 History'],['gk3','⚖️ Polity'],['gk4','💰 Economics'],['gk5','🗺️ Geography'],['gk6','📰 Current Affairs'],['gk7','🔬 Science']]};
+const DS=SUBS.filter(x=>!/^gk\d/.test(x.id));
+function pills(id){const g=Object.keys(GROUPS).find(k=>GROUPS[k].some(z=>z[0]===id));if(!g)return '';return `<div class="row" style="margin-bottom:10px">${GROUPS[g].map(z=>`<button class="${MS[g]===z[0]?'bf':'b'}" data-a="ms" data-g="${g}" data-s="${z[0]}">${z[1]}</button>`).join('')}</div>`}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function day(id,d){d=d||T();const D=S.days[d]=S.days[d]||{};return D[id]=D[id]||{q:0,tasks:[]}}
+const LV=['🌱 Naya','🔁 R1 Shuru','🔥 R2 Garam','⚡ R3 Tez','💎 R4 Pakka','👑 Master'];
+const dueQ=t=>t.done&&t.rev<5&&t.lr&&(Date.now()-t.lr)/864e5>=7;
+function rvh(x,t,i){return `<div class="rv2">${[1,2,3,4,5].map(k=>`<button class="dot ${t.rev>=k?'on':''}" data-a="rv" data-s="${x}" data-i="${i}" data-v="${k}">${k}</button>`).join('')}<span class="lv">${LV[Math.min(5,t.rev)]}${t.rev>5?' ×'+t.rev:''}</span>${dueQ(t)?'<span class="due">⏰ Revise karo!</span>':''}</div>`}
+const LBL={maths:'➗ Maths • Arithmetic',maths2:'➗ Maths • Advance',reasoning:'🧩 Reasoning',english:'📖 English • Vocab',english2:'📖 English • Grammar',english3:'📖 English • Comprehension',gk:'🌍 GK',computer:'💻 Computer'};
+function cnt(d){let t=0,n=0;const D=S.days[d]||{};Object.values(D).forEach(v=>(v.tasks||[]).forEach(k=>{t++;if(k.d)n++}));return [n,t]}
+function dp(){const [n,t]=cnt(T());return t?Math.round(n/t*100):0}
+function tl(id){const dd=day(id);return `  <div class="scroll">${dd.tasks.map((t,i)=>`<div class="it ${t.d?'d':''}"><button class="ck" data-a="tk" data-s="${id}" data-i="${i}">${t.d?'✓':''}</button><span>${esc(t.t)}${t.from?' <small class="due" style="font-weight:600">↪️ pichhle din se</small>':''}</span><button class="x" data-a="dt" data-s="${id}" data-i="${i}">✕</button>${t.n>0?`<div class="rd"><div class="bar" style="flex:1;min-width:70px;margin:0"><i style="width:${Math.min(100,Math.round((t.p||0)/t.n*100))}%"></i></div><b>${t.p||0}/${t.n}</b><button class="b" data-a="tp" data-s="${id}" data-i="${i}" data-v="-1">−1</button><button class="b" data-a="tp" data-s="${id}" data-i="${i}" data-v="1">+1</button><button class="b" data-a="tp" data-s="${id}" data-i="${i}" data-v="5">+5</button></div>`:''}</div>`).join('')||'<div class="empty">Aaj ka koi target nahi likha ✍️</div>'}</div>
+  <div class="row" style="margin-top:6px"><input type="text" id="t-${id}" placeholder="Target likho (jaise: Vocab synonyms)" data-e="${id}-t"><input type="number" min="0" id="n-${id}" placeholder="Qty" title="Kitne karne hain? (optional)"><button class="bf" data-a="at" data-s="${id}">Add</button></div>`}
+function pend(){const T0=T(),r=[];Object.keys(S.days).forEach(d=>{if(d<T0)Object.entries(S.days[d]).forEach(([id,v])=>(v.tasks||[]).forEach(k=>{if(!k.d&&!k.c)r.push([d,id,k])}))});return r}
+function cbtn(){const n=pend().length;return n?`<div class="row" style="margin:10px 0 0"><button class="bf" data-a="co">↪️ ${n} adhoore target aaj le aao</button></div>`:`<div class="sub" style="margin-top:8px">✨ Pichhle dinon ka koi target adhoora nahi!</div>`}
+function dview(){
+ const [n,t]=cnt(T()),p=dp(),C=2*Math.PI*52;
+ const bars=DS.map(x=>{const k=day(x.id).tasks,d=k.filter(z=>z.d).length,pp=k.length?Math.round(d/k.length*100):0;return `<div style="margin-bottom:6px;--c:var(${x.c})"><div class="row" style="justify-content:space-between;font-size:.8rem"><span>${LBL[x.id]}</span><b>${d}/${k.length}</b></div><div class="bar" style="margin:2px 0"><i style="width:${pp}%"></i></div></div>`}).join('');
+ let wk='';for(let i=6;i>=0;i--){const dt=new Date();dt.setDate(dt.getDate()-i);const [a,b]=cnt(dt.toLocaleDateString('en-CA')),h=b?Math.round(a/b*100):0;wk+=`<div style="flex:1;text-align:center"><div style="height:70px;display:flex;align-items:flex-end"><div style="width:100%;height:${h}%;min-height:3px;background:var(--c);border-radius:6px 6px 0 0;opacity:${i?0.6:1}"></div></div><div class="sub" style="font-size:.7rem">${dt.toLocaleDateString('en-IN',{weekday:'short'})}</div><div class="sub" style="font-size:.7rem">${a}/${b}</div></div>`}
+ const top=`<div class="card" style="--c:var(--ac)"><div class="ch"><div class="ic">🎯</div><h2>Aaj ka Daily Target</h2></div>${cbtn()}
+ <div class="row" style="justify-content:center;gap:18px;margin-top:10px"><svg viewBox="0 0 130 130" width="130" height="130"><circle cx="65" cy="65" r="52" fill="none" style="stroke:var(--bd)" stroke-width="12"/><circle cx="65" cy="65" r="52" fill="none" style="stroke:var(--c)" stroke-width="12" stroke-linecap="round" stroke-dasharray="${C*p/100} ${C}" transform="rotate(-90 65 65)"/><text x="65" y="64" text-anchor="middle" font-size="26" font-weight="700" style="fill:var(--tx)">${p}%</text><text x="65" y="83" text-anchor="middle" font-size="11" style="fill:var(--mu)">${n}/${t} pure</text></svg><div style="flex:1;min-width:170px">${bars}</div></div>
+ ${p===100&&t>0?'<div class="win" style="text-align:center;margin-top:6px">🏆 Sab target pure! Kamaal!</div>':''}
+ <h3>📈 Pichhle 7 din</h3><div class="row" style="flex-wrap:nowrap;gap:6px">${wk}</div></div>`;
+ return top+qcard()+DS.map(x=>{const k=day(x.id).tasks;return `<div class="card" style="--c:var(${x.c})"><div class="ch"><h2 style="font-size:1rem">${LBL[x.id]}</h2><div class="pct">${k.filter(z=>z.d).length}/${k.length}</div></div>${tl(x.id)}</div>`}).join('');
+}
+function qcard(){return `<div class="card" style="--c:var(--ac)"><div class="ch"><div class="ic">💬</div><h2>Motivation Quote</h2></div><div class="sub" style="margin-top:6px">Ye quote Diary page ke sabse upar dikhega.</div><textarea id="qin" placeholder="Apna motivation quote likho..." style="height:70px;font-size:.9rem">${esc(S.quote||'')}</textarea><div class="row" style="margin-top:8px"><button class="bf" data-a="qsv">💾 Save quote</button><span class="sub" id="qms"></span></div></div>`}
+function dgView(){
+ const d=DD,D=S.days[d]||{},dt=new Date(d+'T00:00:00'),q=(S.quote||'').trim();
+ let c=0,nc=0,pn=0,body='';
+ DS.forEach(x=>{const k=(D[x.id]&&D[x.id].tasks)||[];if(!k.length)return;
+  body+=`<div class="sj">${LBL[x.id]}</div>`+k.map((t,i)=>{if(t.d)c++;else if(t.nc)nc++;else pn++;
+   return `<div class="dg ${t.d?'ok':t.nc?'no':''}"><div class="dgt">${i+1}. ${esc(t.t)}${t.n>0?` <small class="sub">(${t.p||0}/${t.n})</small>`:''}${t.from?' <small class="due">↪️</small>':''}</div><div class="row"><button class="dgb ok ${t.d?'on':''}" data-a="dgc" data-s="${x.id}" data-i="${i}">✅ Complete</button><button class="dgb no ${t.nc&&!t.d?'on':''}" data-a="dgx" data-s="${x.id}" data-i="${i}">❌ Not complete</button></div><input type="text" class="rmk" placeholder="📝 Remark..." value="${esc(t.rm||'')}" data-a="rmk" data-s="${x.id}" data-i="${i}"></div>`}).join('')});
+ const qh=QE?`<div class="qt"><div class="ql">✨ Aaj ka Motivation</div><textarea id="qin2" placeholder="Apna motivation quote likho..." style="height:80px;font-size:.95rem">${esc(S.quote||'')}</textarea><div class="row" style="margin-top:8px"><button class="bf" data-a="qsv2" style="background:#fff;color:#4c1d95">💾 Save</button><button class="b" data-a="qcn" style="--c:#fff">Cancel</button></div></div>`
+  :`<div class="qt"><div class="ql">✨ Aaj ka Motivation</div><div class="qx">${q?esc(q):'Tap ✏️ aur apna motivation quote likho...'}</div><button class="qe" data-a="qed" title="Edit quote">✏️</button></div>`;
+ const chips=Object.keys(S.days).filter(k=>cnt(k)[1]>0).sort().reverse().slice(0,30).map(k=>{const [a,b]=cnt(k),z=new Date(k+'T00:00:00');return `<button class="chip ${k===d?'on':''}" data-a="dgj" data-d="${k}"><b>${z.toLocaleDateString('en-IN',{day:'numeric',month:'short'})}</b><small>${a}/${b}</small></button>`}).join('');
+ const opts=DS.map(x=>`<option value="${x.id}" ${x.id===DGS?'selected':''}>${LBL[x.id]}</option>`).join('');
+ return qh+`<div class="pg"><h2>📔 Daily Target Diary</h2>
+ <div class="row" style="justify-content:space-between"><button class="b" data-a="dgp" style="--c:var(--ac)">◀</button><div style="text-align:center"><b>${dt.toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}</b>${d===T()?'<div class="sub">Aaj ka page</div>':''}</div><button class="b" data-a="dgn" style="--c:var(--ac)" ${d>=T()?'disabled':''}>▶</button></div>
+ <div class="row" style="margin:8px 0"><input type="date" id="dgd" value="${d}" max="${T()}"><span class="sub">📅 Kisi bhi din ka page kholo</span></div>
+ ${chips?`<div class="sub">Saved din (tap karo):</div><div class="chips">${chips}</div>`:''}
+ <div class="sm3"><span>✅ ${c} Complete</span><span>❌ ${nc} Not complete</span><span>⏳ ${pn} Baaki</span></div>
+ ${body||'<div class="empty">Is din koi daily target nahi likha. Neeche se likho, ya Daily tab me jao.</div>'}
+ <div class="sj">➕ Is page par target likho</div>
+ <div class="row"><select id="dg-s">${opts}</select><input type="text" id="dg-t" placeholder="Target likho..."><input type="number" min="0" id="dg-n" placeholder="Qty" style="width:64px"><button class="bf" data-a="dga">Add</button></div></div>`}
+function streak(){let n=0,d=new Date();const act=k=>{const D=S.days[k];return D&&Object.values(D).some(v=>v.q>0||v.tasks.some(t=>t.d))};
+ if(!act(d.toLocaleDateString('en-CA')))d.setDate(d.getDate()-1);
+ while(act(d.toLocaleDateString('en-CA'))){n++;d.setDate(d.getDate()-1)}return n}
+function render(){
+ document.getElementById('dt').textContent=new Date().toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'})+' • Aaj ka din jeeto! 💪';CD=T();
+ let tq=0,tt=0,tc=0,tr=0,tot=0;
+ const g=SUBS.map(x=>{
+  const sd=S.subs[x.id],dd=day(x.id),tp=sd.topics;
+  const done=tp.filter(t=>t.done).length,pc=tp.length?Math.round(done/tp.length*100):0;
+  const qp=Math.min(100,Math.round(dd.q/Math.max(1,sd.qt)*100));
+  tq+=dd.q;tt+=dd.tasks.filter(t=>t.d).length;tc+=done;tot+=tp.length;tr+=tp.reduce((a,t)=>a+t.rev,0);
+  return x.id!==(MS[TAB]||TAB)?'':`<div class="card" style="--c:var(${x.c})">
+  ${pills(x.id)}<div class="ch"><div class="ic">${x.ic}</div><h2>${x.n}${SEC[x.id]?' • '+SEC[x.id]:''}</h2><div class="pct">${pc}% ✔</div></div>
+  <div class="bar"><i style="width:${pc}%"></i></div>
+  <div class="sub">${done}/${tp.length} topics complete • 👑 ${tp.filter(t=>t.rev>=5).length} master • ⏰ ${tp.filter(dueQ).length} due</div>
+  <h3>📚 Topics &amp; Revision</h3>
+  <div class="scroll">${tp.map((t,i)=>`<div class="it ${t.done?'d':''}"><button class="ck" data-a="td" data-s="${x.id}" data-i="${i}">${t.done?'✓':''}</button><span>${esc(t.n)}</span>${rvh(x.id,t,i)}<button class="x" data-a="xt" data-s="${x.id}" data-i="${i}">✕</button></div>`).join('')||'<div class="empty">Topic/chapter add karo 👇</div>'}</div>
+  <div class="row" style="margin-top:6px"><input type="text" id="p-${x.id}" placeholder="Naya topic / chapter..." data-e="${x.id}-p"><button class="bf" data-a="ap" data-s="${x.id}">Add</button></div>
+  </div>`}).join('');
+ document.getElementById('grid').innerHTML=TAB==='daily'?dview():TAB==='diary'?dgView():g;
+ document.getElementById('tabs').innerHTML=`<button class="tab ${TAB==='diary'?'on':''}" style="--c:var(--ac)" data-a="tab" data-s="diary">📔 Diary<small>${DD===T()?'Aaj':'Purana page'}</small></button><button class="tab ${TAB==='daily'?'on':''}" style="--c:var(--ac)" data-a="tab" data-s="daily">🎯 Daily<small>Aaj ${dp()}%</small></button>`+SUBS.filter(x=>!/\d$/.test(x.id)).map(x=>{const ids=GROUPS[x.id]?GROUPS[x.id].map(z=>z[0]):[x.id];let q=0,t=0;ids.forEach(k=>{S.subs[k].topics.forEach(z=>{t++;if(z.done)q++})});const p=t?Math.round(q/t*100):0;return `<button class="tab ${x.id===TAB?'on':''}" style="--c:var(${x.c})" data-a="tab" data-s="${x.id}">${x.ic} ${x.n}<small>Topics ${p}%</small></button>`}).join('');
+ document.getElementById('stats').innerHTML=[['🔥',streak(),'Day Streak'],['🎯',dp()+'%','Aaj ke Targets'],['✅',tt,'Targets Done'],['📘',tc+'/'+tot,'Topics Complete'],['🔁',tr,'Total Revisions']].map(a=>`<div class="st"><span>${a[0]} ${a[2]}</span><b>${a[1]}</b></div>`).join('');
+}
+document.addEventListener('click',e=>{
+ const b=e.target.closest('[data-a]');if(!b||b.tagName==='INPUT')return;
+ const a=b.dataset.a,s=b.dataset.s,i=+b.dataset.i,v=+b.dataset.v;
+ if(a==='bk'){const ta=document.getElementById('ta');ta.value=JSON.stringify(S);ta.select();let m='Backup code ready — copy kar lo 👇';try{navigator.clipboard.writeText(ta.value).then(()=>{document.getElementById('bm').textContent='✅ Copy ho gaya! Ab kahin save kar lo.'},()=>{})}catch(x){}document.getElementById('bm').textContent=m;return}
+ if(a==='rs'){try{const n=JSON.parse(document.getElementById('ta').value);if(!n.subs||!n.days)throw 0;S=n;ens();save();render();document.getElementById('bm').textContent='✅ Restore ho gaya!'}catch(x){document.getElementById('bm').textContent='❌ Code galat hai, dobara paste karo.'}return}
+ if(a==='rst'){if(b.dataset.c){S=fresh();save();render();document.getElementById('bm').textContent='Sab reset ho gaya.'}else{b.dataset.c=1;b.textContent='⚠️ Pakka? Dobara dabao';setTimeout(()=>{delete b.dataset.c;b.textContent='🗑️ Reset'},3000)}return}
+ if(a==='tab'){TAB=s;render();return}
+ if(a==='qed'){QE=true;render();const t=document.getElementById('qin2');if(t)t.focus();return}
+ if(a==='qcn'){QE=false;render();return}
+ if(a==='qsv2'){S.quote=document.getElementById('qin2').value.trim();QE=false;save();render();return}
+ if(a==='dgj'){DD=b.dataset.d;render();return}
+ if(a==='dga'){const sid=document.getElementById('dg-s').value,tx=document.getElementById('dg-t').value.trim();if(!tx)return;const n=Math.max(0,+document.getElementById('dg-n').value||0);day(sid,DD).tasks.push({t:tx,d:false,n:n,p:0});DGS=sid;save();render();return}
+ if(a==='qsv'){S.quote=document.getElementById('qin').value.trim();save();document.getElementById('qms').textContent='✅ Saved';return}
+ if(a==='dgp'||a==='dgn'){const z=new Date(DD+'T00:00:00');z.setDate(z.getDate()+(a==='dgp'?-1:1));const n=z.toLocaleDateString('en-CA');if(n>T())return;DD=n;render();return}
+ if(a==='dgc'||a==='dgx'){const t=day(s,DD).tasks[i];if(a==='dgc'){t.d=!t.d;t.nc=false;if(t.n>0)t.p=t.d?t.n:Math.min(t.p||0,t.n-1)}else{t.nc=!t.nc;if(t.nc)t.d=false}save();render();return}
+ if(a==='co'){pend().forEach(([d,id,k])=>{const rem=k.n>0?k.n-(k.p||0):0,td=day(id).tasks;if(!td.some(z=>z.t===k.t&&!z.d))td.push({t:k.t,d:false,n:rem,p:0,from:d});k.c=1});save();render();return}
+ if(a==='ms'){MS[b.dataset.g]=s;render();return}
+ const sd=S.subs[s],dd=day(s);
+ if(a==='q')dd.q=Math.max(0,dd.q+v);
+ else if(a==='tk'){const t=dd.tasks[i];t.d=!t.d;if(t.n>0)t.p=t.d?t.n:Math.min(t.p||0,t.n-1)}
+ else if(a==='tp'){const t=dd.tasks[i];t.p=Math.max(0,(t.p||0)+v);t.d=t.n>0&&t.p>=t.n}
+ else if(a==='dt')dd.tasks.splice(i,1);
+ else if(a==='at'){const el=document.getElementById('t-'+s);if(!el.value.trim())return;const n=Math.max(0,+document.getElementById('n-'+s).value||0);dd.tasks.push({t:el.value.trim(),d:false,n:n,p:0})}
+ else if(a==='ap'){const el=document.getElementById('p-'+s);if(!el.value.trim())return;sd.topics.push({n:el.value.trim(),done:false,rev:0})}
+ else if(a==='td')sd.topics[i].done=!sd.topics[i].done;
+ else if(a==='rv'){const t=sd.topics[i];t.rev=(t.rev===v)?v-1:v;if(t.rev>0)t.lr=Date.now()}
+ else if(a==='xt')sd.topics.splice(i,1);
+ else return;
+ save();render();
+});
+document.addEventListener('change',e=>{const t=e.target;if(t.id==='dgd'){if(t.value&&t.value<=T()){DD=t.value;render()}}else if(t.id==='dg-s'){DGS=t.value}else if(t.dataset.a==='rmk'){day(t.dataset.s,DD).tasks[+t.dataset.i].rm=t.value;save()}else if(t.dataset.a==='qt'){S.subs[t.dataset.s].qt=Math.max(0,+t.value||0);save();render()}else if(t.dataset.a==='qd'){day(t.dataset.s).q=Math.max(0,+t.value||0);save();render()}});
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='dg-t'){document.querySelector('[data-a=dga]').click();return}if(e.key==='Enter'&&['qd','qt'].includes(e.target.dataset.a))e.target.blur();if(e.key==='Enter'&&e.target.dataset.e){const [s,k]=e.target.dataset.e.split('-');document.querySelector(`[data-a="${k==='t'?'at':'ap'}"][data-s="${s}"]`).click()}});
+let CD=T();
+const chk=()=>{if(T()!==CD){if(DD===CD)DD=T();render()}};
+setInterval(chk,20000);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk()});
+window.addEventListener('focus',chk);
+render();
+</script></body></html>
